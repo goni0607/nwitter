@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -11,4 +12,5 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export default initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+export const authService = getAuth(app);
