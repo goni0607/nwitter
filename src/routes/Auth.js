@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { createUser, signInUser } from "fbase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+} from "firebase/auth";
+import { authUserWithEmailPassword, authUserWithSocial } from "fbase";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -8,15 +14,26 @@ export default function Auth() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (event) => {
-    let data;
+    let result;
     event.preventDefault();
     if (toggleAccount) {
-      data = await createUser(email, password);
+      result = await authUserWithEmailPassword(
+        createUserWithEmailAndPassword,
+        email,
+        password
+      );
     } else {
-      data = await signInUser(email, password);
+      result = await authUserWithEmailPassword(
+        signInWithEmailAndPassword,
+        email,
+        password
+      );
     }
-    console.log(data);
+    if (result.message) {
+      setErrorMessage(result.message);
+    }
   };
+
   const onChange = (event) => {
     const {
       target: { name, value },
@@ -27,11 +44,28 @@ export default function Auth() {
       setPassword(value);
     }
   };
+
   const onAccountToggle = (event) => {
     setToggleAccount(event.target.value === "true" ? true : false);
   };
+
+  const onSocialClick = async (event) => {
+    const {
+      target: { name },
+    } = event;
+    let provider;
+    if (name === "google") {
+      provider = GoogleAuthProvider;
+    } else if (name === "github") {
+      provider = GithubAuthProvider;
+    }
+    const result = await authUserWithSocial(provider);
+    console.log(result);
+  };
+
   return (
     <div>
+      {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={onSubmit}>
         <div>
           <input
@@ -84,8 +118,12 @@ export default function Auth() {
           />
         </div>
         <div>
-          <button>Continue with Google</button>
-          <button>Continue with Github</button>
+          <button type="button" onClick={onSocialClick} name="google">
+            Continue with Google
+          </button>
+          <button type="button" onClick={onSocialClick} name="github">
+            Continue with Github
+          </button>
         </div>
       </form>
     </div>

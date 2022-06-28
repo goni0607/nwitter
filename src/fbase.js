@@ -1,9 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithPopup } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,11 +15,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const authService = getAuth(app);
 
-// Create user with email and password
-export const createUser = async (email, password) => {
+/**
+ * Authentication with email and password
+ * @param {func} func
+ * @param {string} email
+ * @param {string} password
+ * @returns
+ */
+export const authUserWithEmailPassword = async (func, email, password) => {
   const auth = getAuth(app);
   let result;
-  await createUserWithEmailAndPassword(auth, email, password)
+  await func(auth, email, password)
     .then((userCredential) => {
       result = userCredential;
     })
@@ -33,15 +35,38 @@ export const createUser = async (email, password) => {
   return result;
 };
 
-export const signInUser = async (email, password) => {
+export const authUserWithSocial = async (socialProvider) => {
   const auth = getAuth(app);
-  let result;
-  await signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      result = userCredential;
+  auth.languageCode = "ko";
+  const provider = new socialProvider();
+  provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+  provider.setCustomParameters({
+    login_hint: "user@example.com",
+  });
+  let results;
+
+  await signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = socialProvider.credentialFromResult(result);
+      results = {
+        credential: credential,
+        token: credential.accessToken,
+        // The signed-in user info.
+        user: result.user,
+      };
     })
     .catch((error) => {
-      result = error;
+      results = {
+        // Handle Errors here.
+        errorCode: error.code,
+        errorMessage: error.message,
+        // The email of the user's account used.
+        email: error.customData.email,
+        // The AuthCredential type that was used.
+        credential: socialProvider.credentialFromError(error),
+        // ...
+      };
     });
-  return result;
+  return results;
 };
