@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useInput } from "hooks/useInput";
 import { dbService } from "fbase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
+import Nweet from "components/Nweet";
 
-export default function Home() {
+export default function Home({ userObj }) {
   const nweet = useInput();
   const [nweets, setNweets] = useState([]);
-
+  /* 기본 get 방식
   const getNweets = async () => {
     const querySnapshot = await getDocs(collection(dbService, "nweets"));
     querySnapshot.forEach((doc) => {
@@ -17,16 +25,26 @@ export default function Home() {
       setNweets((prev) => [nweetObject, ...prev]);
     });
   };
+  */
 
   useEffect(() => {
-    getNweets();
+    // getNweets();
+    const q = query(collection(dbService, "nweets"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const nweets = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setNweets(nweets);
+    });
   }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     await addDoc(collection(dbService, "nweets"), {
       nweet: nweet.value,
-      createAt: Date.now(),
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
     });
     nweet.changeValue("");
   };
@@ -46,9 +64,11 @@ export default function Home() {
       <section>
         <ul>
           {nweets.map((nweet) => (
-            <li key={nweet.id}>
-              {nweet.nweet} - {new Date(nweet.createAt).toString()}
-            </li>
+            <Nweet
+              key={nweet.id}
+              nweet={nweet}
+              isOnwer={nweet.creatorId === userObj.uid}
+            />
           ))}
         </ul>
       </section>
