@@ -1,21 +1,42 @@
 import React, { useState } from "react";
-import { doc, deleteDoc, runTransaction } from "firebase/firestore";
+import { doc, deleteDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { dbService } from "fbase";
 import { useInput } from "hooks/useInput";
 
 export default function Nweet({ nweet, isOnwer }) {
   const [isEditing, setIsEditing] = useState(false);
   const editNweet = useInput(nweet.text);
+  /**
+   * 삭제 버튼 클릭 이벤트
+   */
   const onDeleteClick = async () => {
     if (window.confirm("Are you sure you want to delete this nweet?")) {
       await deleteDoc(doc(dbService, "nweets", nweet.id));
     }
   };
+  /**
+   * 수정 버튼 클릭 이벤트
+   * 수정 모드로 변경한다.
+   */
   const onEditClick = () => setIsEditing(true);
+  /**
+   * 수정 취소 버튼 클릭 이벤트
+   * 수정 모드를 취소한다.
+   */
   const onEditCancelClick = () => setIsEditing(false);
+  /**
+   * 폼 전송 이벤트
+   * 수정 모드에서 내용을 수정 후 Nweet 내용을 수정한다.
+   */
   const onSubmit = async (event) => {
     event.preventDefault();
     const sfDocRef = doc(dbService, "nweets", nweet.id);
+    await updateDoc(sfDocRef, {
+      text: editNweet.value,
+      updatedAt: Date.now(),
+    });
+    setIsEditing(false);
+    /* transaction 사용
     try {
       await runTransaction(dbService, async (transaction) => {
         const sfDoc = await transaction.get(sfDocRef);
@@ -33,6 +54,7 @@ export default function Nweet({ nweet, isOnwer }) {
       // This will be a "population is too big" error.
       console.error(e);
     }
+    */
   };
 
   return (
