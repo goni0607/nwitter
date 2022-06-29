@@ -14,7 +14,7 @@ import Nweet from "components/Nweet";
 export default function Home({ userObj }) {
   const nweet = useInput();
   const [nweets, setNweets] = useState([]);
-  const [nweetImage, setNweetImage] = useState(null);
+  const [attachment, setAttachment] = useState(null);
   /* 기본 get 방식
   const getNweets = async () => {
     const querySnapshot = await getDocs(collection(dbService, "nweets"));
@@ -57,10 +57,12 @@ export default function Home({ userObj }) {
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
-      setNweetImage(finishedEvent.target.result);
+      setAttachment(finishedEvent.target.result);
     };
     reader.readAsDataURL(theFile);
   };
+
+  const onClearAttachment = () => setAttachment(null);
   return (
     <div>
       <h1>Nwitter</h1>
@@ -74,9 +76,10 @@ export default function Home({ userObj }) {
         />
         <input type="file" accept="image/*" onChange={onChangeFile} />
         <input type="submit" value="Nweet" />
-        {nweetImage && (
+        {attachment && (
           <div>
-            <img src={nweetImage} alt="preview attach file" />
+            <img src={attachment} alt="preview attached file" />
+            <button onClick={onClearAttachment}>Clear Photo</button>
           </div>
         )}
         <div></div>
