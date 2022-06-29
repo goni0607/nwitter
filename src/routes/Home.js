@@ -42,7 +42,7 @@ export default function Home({ userObj }) {
   const onSubmit = async (event) => {
     event.preventDefault();
     await addDoc(collection(dbService, "nweets"), {
-      nweet: nweet.value,
+      text: nweet.value,
       createdAt: Date.now(),
       creatorId: userObj.uid,
     });
@@ -62,6 +62,9 @@ export default function Home({ userObj }) {
         <input type="submit" value="Nweet" />
       </form>
       <section>
+        <heading>
+          <h2>Nweet Lists</h2>
+        </heading>
         <ul>
           {nweets.map((nweet) => (
             <Nweet
