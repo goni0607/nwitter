@@ -10,7 +10,7 @@ export default function App() {
     authService.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
-        setUserObj(user);
+        setUserInfo(user);
       } else {
         setIsLoggedIn(false);
       }
@@ -18,10 +18,26 @@ export default function App() {
     });
   }, []);
 
+  const refreshUser = () => {
+    const newUserObj = authService.currentUser;
+    setUserInfo(newUserObj);
+  };
+
+  const setUserInfo = (user) => {
+    setUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+    });
+  };
+
   return (
     <>
       {init ? (
-        <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
+        <AppRouter
+          isLoggedIn={isLoggedIn}
+          userObj={userObj}
+          refreshUser={refreshUser}
+        />
       ) : (
         "Initializing..."
       )}

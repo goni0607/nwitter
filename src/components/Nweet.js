@@ -67,7 +67,11 @@ export default function Nweet({ nweet, isOnwer }) {
       {!isEditing && (
         <>
           <p>{nweet.text}</p>
-          <img src={nweet.attachmentUrl} style={{ maxWidth: "440px" }} />
+          {nweet.attachmentUrl && (
+            <>
+              <img src={nweet.attachmentUrl} style={{ maxWidth: "440px" }} />
+            </>
+          )}
         </>
       )}
       {isOnwer && (

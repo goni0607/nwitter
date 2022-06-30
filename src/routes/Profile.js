@@ -5,7 +5,7 @@ import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 import { useInput } from "hooks/useInput";
 
-export default function Profile({ userObj }) {
+export default function Profile({ userObj, refreshUser }) {
   const txtDisplayName = useInput(userObj.displayName);
   const navigate = useNavigate();
   const onLogOutClick = () => {
@@ -31,7 +31,10 @@ export default function Profile({ userObj }) {
   const onUpdateProfile = async (event) => {
     event.preventDefault();
     if (userObj.displayName !== txtDisplayName.value) {
-      await updateProfile(userObj, { displayName: txtDisplayName.value });
+      await updateProfile(authService.currentUser, {
+        displayName: txtDisplayName.value,
+      });
+      refreshUser();
     }
   };
 
