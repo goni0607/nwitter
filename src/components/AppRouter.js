@@ -7,7 +7,7 @@ import Navigation from "./Navigation";
 export default function Router({ isLoggedIn, userObj }) {
   return (
     <BrowserRouter>
-      {isLoggedIn && <Navigation />}
+      {isLoggedIn && <Navigation userObj={userObj} />}
       <Routes>
         {isLoggedIn ? (
           <>

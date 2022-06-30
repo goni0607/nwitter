@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Navigation() {
+export default function Navigation({ userObj }) {
   return (
     <nav>
       <ul>
@@ -9,7 +9,7 @@ export default function Navigation() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/profile">My Profile</Link>
+          <Link to="/profile">{userObj.displayName} Profile</Link>
         </li>
       </ul>
     </nav>
