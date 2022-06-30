@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { doc, deleteDoc, runTransaction, updateDoc } from "firebase/firestore";
-import { dbService } from "fbase";
+import { dbService, storageService } from "fbase";
+import { ref, deleteObject } from "firebase/storage";
 import { useInput } from "hooks/useInput";
 
 export default function Nweet({ nweet, isOnwer }) {
@@ -12,6 +13,10 @@ export default function Nweet({ nweet, isOnwer }) {
   const onDeleteClick = async () => {
     if (window.confirm("Are you sure you want to delete this nweet?")) {
       await deleteDoc(doc(dbService, "nweets", nweet.id));
+      if (nweet.attachmentUrl) {
+        const attachmentRef = ref(storageService, nweet.attachmentUrl);
+        await deleteObject(attachmentRef);
+      }
     }
   };
   /**
@@ -59,7 +64,12 @@ export default function Nweet({ nweet, isOnwer }) {
 
   return (
     <li>
-      {!isEditing && nweet.text}
+      {!isEditing && (
+        <>
+          <p>{nweet.text}</p>
+          <img src={nweet.attachmentUrl} style={{ maxWidth: "440px" }} />
+        </>
+      )}
       {isOnwer && (
         <>
           {isEditing && (
