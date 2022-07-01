@@ -97,11 +97,11 @@ export default function Nweet({ nweet, isOnwer }) {
           )}
           <div className="nweet__actions">
             <button onClick={onEditClick}>
-              <FontAwesomeIcon icon={faTrash} />
+              <FontAwesomeIcon icon={faPencilAlt} />
               <span className="sr-only">Edit Nweet</span>
             </button>
             <button onClick={onDeleteClick}>
-              <FontAwesomeIcon icon={faPencilAlt} />
+              <FontAwesomeIcon icon={faTrash} />
               <span class="sr-only">Delete Nweet</span>
             </button>
           </div>

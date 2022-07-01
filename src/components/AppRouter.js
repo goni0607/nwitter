@@ -6,7 +6,7 @@ import Navigation from "./Navigation";
 
 export default function Router({ isLoggedIn, userObj, refreshUser }) {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       {isLoggedIn && <Navigation userObj={userObj} refreshUser={refreshUser} />}
       <div className="wrap">
         <Routes>
