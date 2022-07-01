@@ -43,19 +43,29 @@ export default function Profile({ userObj, refreshUser }) {
   }, []);
 
   return (
-    <div>
-      <h1>Profile</h1>
-      <form onSubmit={onUpdateProfile}>
-        <label htmlFor="displayName">Display Name: </label>
+    <div className="container">
+      <h1 className="sr-only">Profile</h1>
+      <form onSubmit={onUpdateProfile} className="profileForm">
+        <label htmlFor="displayName" className="sr-only">
+          Display Name
+        </label>
         <input
           type="text"
           id="displayName"
           value={txtDisplayName.value}
           onChange={txtDisplayName.onChange}
+          className="formInput"
         />
-        <input type="submit" value="Update profile" />
+        <input
+          type="submit"
+          value="Update profile"
+          className="formBtn"
+          style={{ marginTop: 10 }}
+        />
       </form>
-      <button onClick={onLogOutClick}>Log out</button>
+      <button onClick={onLogOutClick} className="formBtn cancelBtn logOut">
+        Log out
+      </button>
     </div>
   );
 }

@@ -8,19 +8,24 @@ export default function Router({ isLoggedIn, userObj, refreshUser }) {
   return (
     <BrowserRouter>
       {isLoggedIn && <Navigation userObj={userObj} refreshUser={refreshUser} />}
-      <Routes>
-        {isLoggedIn ? (
-          <>
-            <Route path="/" element={<Home userObj={userObj} />} />
-            <Route
-              path="/profile"
-              element={<Profile userObj={userObj} refreshUser={refreshUser} />}
-            />
-          </>
-        ) : (
-          <Route path="/" element={<Auth />} />
-        )}
-      </Routes>
+      <div className="wrap">
+        <Routes>
+          {isLoggedIn ? (
+            <>
+              <Route path="/" element={<Home userObj={userObj} />} />
+              <Route
+                path="/profile"
+                element={
+                  <Profile userObj={userObj} refreshUser={refreshUser} />
+                }
+              />
+            </>
+          ) : (
+            <Route path="/" element={<Auth />} />
+          )}
+        </Routes>
+      </div>
+      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </BrowserRouter>
   );
 }

@@ -3,6 +3,8 @@ import { doc, deleteDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { dbService, storageService } from "fbase";
 import { ref, deleteObject } from "firebase/storage";
 import { useInput } from "hooks/useInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default function Nweet({ nweet, isOnwer }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -63,7 +65,7 @@ export default function Nweet({ nweet, isOnwer }) {
   };
 
   return (
-    <li>
+    <li className="nweet">
       {!isEditing && (
         <>
           <p>{nweet.text}</p>
@@ -78,7 +80,7 @@ export default function Nweet({ nweet, isOnwer }) {
         <>
           {isEditing && (
             <>
-              <form onSubmit={onSubmit}>
+              <form onSubmit={onSubmit} className="container nweetEdit">
                 <input
                   type="text"
                   value={editNweet.value}
@@ -86,14 +88,22 @@ export default function Nweet({ nweet, isOnwer }) {
                   required
                   placeholder="Edit you want it"
                 />
-                <button>Update Nweet</button>
-                <button onClick={onEditCancelClick}>cancel</button>
+                <button className="formBtn">Update Nweet</button>
               </form>
+              <button onClick={onEditCancelClick} className="formBtn cancelBtn">
+                cancel
+              </button>
             </>
           )}
-          <div>
-            <button onClick={onEditClick}>Edit Nweet</button>
-            <button onClick={onDeleteClick}>Delete Nweet</button>
+          <div className="nweet__actions">
+            <button onClick={onEditClick}>
+              <FontAwesomeIcon icon={faTrash} />
+              <span className="sr-only">Edit Nweet</span>
+            </button>
+            <button onClick={onDeleteClick}>
+              <FontAwesomeIcon icon={faPencilAlt} />
+              <span class="sr-only">Delete Nweet</span>
+            </button>
           </div>
         </>
       )}

@@ -49,9 +49,8 @@ export default function AuthForm() {
 
   return (
     <>
-      {errorMessage && <p>{errorMessage}</p>}
-      <form onSubmit={onSubmit}>
-        <div>
+      <form onSubmit={onSubmit} className="container">
+        <div style={{ marginBottom: 15 }}>
           <input
             type="radio"
             name="account-toggle"
@@ -60,7 +59,9 @@ export default function AuthForm() {
             checked={!toggleAccount}
             onChange={onAccountToggle}
           />
-          <label htmlFor="account-signin">Sign In</label>
+          <label htmlFor="account-signin" className="ml-1">
+            Sign In
+          </label>
           <input
             type="radio"
             name="account-toggle"
@@ -68,8 +69,11 @@ export default function AuthForm() {
             value="true"
             checked={toggleAccount}
             onChange={onAccountToggle}
+            className="ml-3"
           />
-          <label htmlFor="account-create">Create Account</label>
+          <label htmlFor="account-create" className="ml-1">
+            Create Account
+          </label>
         </div>
         <div>
           <label htmlFor="email">Email: </label>
@@ -81,6 +85,7 @@ export default function AuthForm() {
             placeholder="Enter your Email"
             value={email}
             onChange={onChange}
+            className="authInput"
           />
         </div>
         <div>
@@ -93,13 +98,16 @@ export default function AuthForm() {
             placeholder="Enter your password"
             value={password}
             onChange={onChange}
+            className="authInput"
           />
         </div>
         <div>
           <input
             type="submit"
             value={toggleAccount ? "Create Account" : "Log in"}
+            className="authInput authSubmit"
           />
+          {errorMessage && <p className="authError">{errorMessage}</p>}
         </div>
       </form>
     </>

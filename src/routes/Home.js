@@ -22,14 +22,13 @@ export default function Home({ userObj }) {
   }, []);
 
   return (
-    <div>
-      <h1>Nwitter</h1>
+    <div className="container">
       <NweetFactory userObj={userObj} />
       <section>
         <header>
-          <h2>Nweet Lists</h2>
+          <h2 className="sr-only">Nweet Lists</h2>
         </header>
-        <ul>
+        <ul style={{ marginTop: 30 }}>
           {nweets.map((nweet) => (
             <Nweet
               key={nweet.id}
